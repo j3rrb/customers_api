@@ -15,7 +15,7 @@ export default class CreateUserDTO {
   lastName: string;
 
   @IsEmail()
-  email?: string;
+  email: string;
 
   @IsString()
   primaryPhoneNumber: string;

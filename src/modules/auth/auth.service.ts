@@ -20,7 +20,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (!user) throw new NotFoundException('User not found!');
+    if (!user) throw new NotFoundException('Usuário não encontrado!');
 
     const { hash, salt } = await this.prismaService.auth.findFirst({
       where: {
@@ -31,12 +31,20 @@ export class AuthService {
     const compareHash = await bcrypt.hash(password, salt);
     const isEqual = compareHash === hash;
 
-    if (!isEqual) throw new UnauthorizedException();
+    if (!isEqual) throw new UnauthorizedException('Não autorizado!');
 
     return user;
   }
 
   async login(user: User) {
     return { accessToken: this.jwtService.sign({ sub: user.id, ...user }) };
+  }
+
+  async validateToken(token: string) {
+    try {
+      await this.jwtService.verifyAsync(token);
+    } catch (error) {
+      throw new UnauthorizedException('Token inválido: ' + error.message);
+    }
   }
 }

@@ -15,4 +15,11 @@ export class AuthController {
 
     return this.authService.login(user);
   }
+
+  @ApiTags('Validate Token')
+  @Post('validate-token')
+  @HttpCode(202)
+  async validateToken(@Body() { token }: { token: string }) {
+    await this.authService.validateToken(token);
+  }
 }

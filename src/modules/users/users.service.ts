@@ -24,7 +24,7 @@ export class UsersService {
       },
     });
 
-    if (existentUser) throw new ConflictException('User already exists!');
+    if (existentUser) throw new ConflictException('Usuário já existe!');
 
     const { hash, salt } = await createPassword(data.password);
 
