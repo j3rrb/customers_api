@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { NestApplicationOptions, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import PrismaService from '@modules/prisma/prisma.service';
 import { AppModule } from './app.module';
@@ -6,11 +6,11 @@ import * as Compression from 'compression';
 import Helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-const appOptions = {
+const appOptions: NestApplicationOptions = {
   cors: {
-    maxAge: 3600,
-    origin: ['*'],
-    methods: ['POST', 'GET', 'PATCH', 'DELETE'],
+    credentials: true,
+    origin: 'http://localhost:4000',
+    methods: ['POST', 'GET', 'PATCH'],
   },
 };
 

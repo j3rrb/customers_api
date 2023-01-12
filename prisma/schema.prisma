@@ -21,6 +21,13 @@ enum EGenders {
   OTHER
 }
 
+enum EOrderStatus {
+  ACCEPTED
+  REFUSED
+  OPENED
+  DELETED
+}
+
 model Auth {
   id     Int    @id @default(autoincrement())
   salt   String
@@ -36,7 +43,7 @@ model User {
   id                   Int      @id @default(autoincrement())
   firstName            String   @db.VarChar(45)
   lastName             String   @db.VarChar(45)
-  email                String?  @unique
+  email                String   @unique
   primaryPhoneNumber   String   @unique
   secondaryPhoneNumber String?
   gender               EGenders
@@ -45,7 +52,26 @@ model User {
   auth                 Auth[]
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+  User_Order_architect Order[]  @relation("User_architect")
+  User_Order_customer  Order[]  @relation("User_customer")
 
   @@index([id])
   @@map("user")
+}
+
+model Order {
+  id             Int          @id @default(autoincrement())
+  architect      User         @relation("User_architect", fields: [architectId], references: [id])
+  customer       User         @relation("User_customer", fields: [customerId], references: [id])
+  detailsText    Bytes
+  deadlineInDays Int
+  status         EOrderStatus @default(OPENED)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  architectId Int
+  customerId  Int
+
+  @@index([id])
+  @@map("order")
 }

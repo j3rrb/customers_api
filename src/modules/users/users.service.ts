@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import PrismaService from '@modules/prisma/prisma.service';
 import createPassword from '../../utils/createPassword';
-import { Roles } from 'types';
+import { Roles } from 'src/types';
 import CreateUserDTO from './dtos/create.dto';
 
 @Injectable()
@@ -14,6 +14,9 @@ export class UsersService {
       where: {
         role,
       },
+      orderBy: {
+        updatedAt: 'desc',
+      },
     });
   }
 
@@ -24,7 +27,7 @@ export class UsersService {
       },
     });
 
-    if (existentUser) throw new ConflictException('User already exists!');
+    if (existentUser) throw new ConflictException('Usuário já existe!');
 
     const { hash, salt } = await createPassword(data.password);
 

@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Genders, Roles } from 'types';
+import { Genders, Roles } from 'src/types';
 
 export default class CreateUserDTO {
   @IsString()
@@ -15,7 +15,7 @@ export default class CreateUserDTO {
   lastName: string;
 
   @IsEmail()
-  email?: string;
+  email: string;
 
   @IsString()
   primaryPhoneNumber: string;
