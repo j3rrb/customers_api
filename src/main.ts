@@ -10,7 +10,7 @@ const appOptions: NestApplicationOptions = {
   cors: {
     credentials: true,
     origin: 'http://localhost:4000',
-    methods: ['POST', 'GET', 'PATCH', 'DELETE'],
+    methods: ['POST', 'GET', 'PATCH'],
   },
 };
 
