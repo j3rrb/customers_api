@@ -18,7 +18,7 @@ jobs:
           node-version: 16
 
       - name: Install Node.js dependencies
-        run: npm ci
+        run: yarn ci
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
@@ -27,4 +27,4 @@ jobs:
           prettier: true
 
       - name: Run tests
-        run: npm test
+        run: yarn test
