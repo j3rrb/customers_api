@@ -22,25 +22,29 @@ export class AuthService {
 
     if (!user) throw new NotFoundException('Usuário não encontrado!');
 
-    const { hash, salt } = await this.prismaService.auth.findFirst({
+    const authData = await this.prismaService.auth.findFirst({
       where: {
         userId: user.id,
       },
     });
 
-    const compareHash = await bcrypt.hash(password, salt);
-    const isEqual = compareHash === hash;
+    if (!authData) throw new NotFoundException('Auth data not found!');
+
+    const compareHash = await bcrypt.hash(password, authData.salt);
+    const isEqual = compareHash === authData.hash;
 
     if (!isEqual) throw new UnauthorizedException('Não autorizado!');
 
     return user;
   }
 
-  async login(user: User) {
+  async login(user: User): Promise<{
+    accessToken: string;
+  }> {
     return { accessToken: this.jwtService.sign({ sub: user.id, ...user }) };
   }
 
-  async validateToken(token: string) {
+  async validateToken(token: string): Promise<void> {
     try {
       await this.jwtService.verifyAsync(token);
     } catch (error) {

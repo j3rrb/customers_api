@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 import PrismaService from '@modules/prisma/prisma.service';
 import createPassword from '../../utils/createPassword';
@@ -31,25 +35,31 @@ export class UsersService {
 
     const { hash, salt } = await createPassword(data.password);
 
-    const user = await this.prismaService.user.create({
-      data: {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        birthDate: new Date(data.birthDate),
-        gender: data.gender,
-        primaryPhoneNumber: data.primaryPhoneNumber,
-        email: data.email,
-        secondaryPhoneNumber: data.secondaryPhoneNumber,
-        role: data.role,
-        auth: {
-          create: {
-            hash,
-            salt,
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthDate: new Date(data.birthDate),
+          gender: data.gender,
+          primaryPhoneNumber: data.primaryPhoneNumber,
+          email: data.email,
+          secondaryPhoneNumber: data.secondaryPhoneNumber,
+          role: data.role,
+          auth: {
+            create: {
+              hash,
+              salt,
+            },
           },
         },
-      },
-    });
+      });
 
-    return user;
+      return user;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Houve um erro ao criar o usuário: ' + error.message,
+      );
+    }
   }
 }

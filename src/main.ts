@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import PrismaService from '@modules/prisma/prisma.service';
 import { AppModule } from './app.module';
 import * as Compression from 'compression';
+import * as Morgan from 'morgan';
 import Helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -25,6 +26,7 @@ async function bootstrap() {
 
   app.use(Compression());
   app.use(Helmet());
+  app.use(Morgan('combined'));
   app.useGlobalPipes(new ValidationPipe());
 
   SwaggerModule.setup('api', app, document);

@@ -12,7 +12,7 @@ export default async function createPassword(rawText: string, rounds = 10) {
     };
   } catch (error) {
     throw new InternalServerErrorException(
-      'Failed to create password! -> ' + error,
+      'Failed to create password: ' + error.message,
     );
   }
 }

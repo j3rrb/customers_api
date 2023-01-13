@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { Order, User } from '@prisma/client';
 import { OrderStatuses } from 'src/types';
 import CreateOrderDTO from './dtos/create.dto';
 import UpdateOrderDTO from './dtos/update.dto';
@@ -12,7 +13,9 @@ import UpdateOrderDTO from './dtos/update.dto';
 export class OrdersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getOrder(orderId: number) {
+  async getOrder(
+    orderId: number,
+  ): Promise<(Order & { architect: User; customer: User }) | null> {
     return await this.prismaService.order.findUnique({
       where: { id: +orderId },
       include: {
@@ -22,7 +25,15 @@ export class OrdersService {
     });
   }
 
-  async listOrdersByCustomer(customerId: number, status?: OrderStatuses) {
+  async listOrdersByCustomer(
+    customerId: number,
+    status?: OrderStatuses,
+  ): Promise<
+    (Order & {
+      architect: User;
+      customer: User;
+    })[]
+  > {
     const orders = await this.prismaService.order.findMany({
       where: {
         status,
@@ -40,7 +51,15 @@ export class OrdersService {
     return orders;
   }
 
-  async listOrdersByArchitect(architectId: number, status?: OrderStatuses) {
+  async listOrdersByArchitect(
+    architectId: number,
+    status?: OrderStatuses,
+  ): Promise<
+    (Order & {
+      architect: User;
+      customer: User;
+    })[]
+  > {
     const orders = await this.prismaService.order.findMany({
       where: {
         status,
@@ -61,7 +80,7 @@ export class OrdersService {
     return orders;
   }
 
-  async update(id: number, data: UpdateOrderDTO) {
+  async update(id: number, data: UpdateOrderDTO): Promise<Order> {
     const order = await this.prismaService.order.findUnique({
       where: { id: +id },
     });
@@ -90,7 +109,7 @@ export class OrdersService {
     }
   }
 
-  async create(data: CreateOrderDTO) {
+  async create(data: CreateOrderDTO): Promise<Order> {
     const customer = await this.prismaService.user.findUnique({
       where: { id: +data.customerId },
     });
