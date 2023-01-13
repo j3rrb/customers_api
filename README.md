@@ -16,3 +16,4 @@
 10. Para aplicar as regras do eslint nos arquivos .ts, utilize o comando <strong>yarn lint</strong>.
 11. Para formatar os arquivos, utilize o comando <strong>yarn format</strong>.
 12. Para rodar os testes unitários, utlize o comando <strong>yarn test</strong>.
+13. Para acessar a documentação dos endpoints da API, acesse http://localhost:<porta_utilizada>/api
