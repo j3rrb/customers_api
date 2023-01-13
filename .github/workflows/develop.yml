@@ -21,10 +21,7 @@ jobs:
         run: yarn
 
       - name: Run linters
-        uses: wearerequired/lint-action@v2
-        with:
-          eslint: true
-          prettier: true
+        run: yarn lint
 
       - name: Run tests
         run: yarn test
